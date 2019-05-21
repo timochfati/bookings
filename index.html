@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Bookings</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
+  <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      emailjs.init("user_BDVovy1ZtvxS6Imm1FZtN");
+    })();
+  </script>
+  <style>
+    /*hotels map styling*/
+
+    #map {
+      height: 500px;
+      width: 80%;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      font-size: 12px;
+    }
+
+    #listing {
+      width: 400px;
+      height: 470px;
+      overflow: auto;
+      left: 442px;
+      top: 0px;
+      cursor: pointer;
+      overflow-x: hidden;
+    }
+
+    #findhotels {
+      text-align: right;
+      width: 100px;
+      font-size: 14px;
+      padding: 4px;
+      margin: 5px;
+      z-index: 5;
+      background-color: #fff;
+    }
+
+    #locationField {
+      width: 190px;
+      height: 25px;
+      left: 108px;
+      top: 0px;
+      z-index: 5;
+      margin: 5px;
+      background-color: #fff;
+    }
+
+    #controls {
+      left: 300px;
+      width: 140px;
+      top: 0px;
+      z-index: 5;
+      margin: 5px;
+      background-color: #fff;
+    }
+
+    #autocomplete {
+      width: 100%;
+    }
+
+    #country {
+      width: 100%;
+    }
+
+    .placeIcon {
+      width: 20px;
+      height: 34px;
+      margin: 4px;
+    }
+
+    .hotelIcon {
+      width: 24px;
+      height: 24px;
+    }
+
+    #resultsTable {
+      border-collapse: collapse;
+      width: 240px;
+    }
+
+    #rating {
+      font-size: 13px;
+      font-family: Arial;
+    }
+
+    .iw_table_row {
+      height: 18px;
+    }
+
+    .iw_attribute_name {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .iw_table_icon {
+      text-align: right;
+    }
+
+  </style>
+
+</head>
+
+<body class="w3-light-grey">
+
+  <!-- Nav menu when on small screens -->
+  <div class="topnav">
+    <a href="index.html" class=" active w3-bar-item w3-button w3-text-blue w3-hover-black"><b><i class="fa fa-globe w3-margin-right"></i>Booking-O'clock</b></a>
+    <div id="myLinks">
+      <a href="index.html">Hotels</a>
+      <a href="explore.html">Explore</a>
+    </div>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+  </div>
+
+  <header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+    <img class="w3-image" src="assets/images/chefchaouen.jpg" alt="Morocco" width="1500" height="100">
+    <div class="w3-display-middle" style="width:50%">
+      <div class="w3-bar w3-black">
+        <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'hotels');"><i class="fa fa-bed w3-margin-right"></i>Hotels</button>
+        <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'explore');"><i class="fa fa-search w3-margin-right"></i>Explore</button>
+      </div>
+
+      <!-- Tabs -->
+      <div id="hotels" class="w3-container w3-white w3-padding-16 myLink">
+        <p>
+          <h3>Find the perfect hotel for your next trip. No matter which corner of the world your travels take you.</h3>
+        </p>
+        <p> Get the best discounts when you book with us! </p>
+        <p><a href="#hotel"><button class="w3-button w3-black">Search Hotels Now</button></a></p>
+      </div>
+
+      <div id="explore" class="w3-container w3-white w3-padding-16 myLink">
+        <h3><i>Dream. Explore. Discover</i></h3>
+        <p>
+          <h4>Look for the best Restaurants & Tourist attractions anywhere in the world! </h4>
+        </p>
+        <p><a href="explore.html"><button class="w3-button w3-black">Start Looking Now</button></a></p>
+      </div>
+    </div>
+  </header>
+
+  <div class="w3-content" style="max-width:1100px;">
+    <div class="w3-container w3-margin-top">
+      <h3><b>Famous Holiday Destinations 2018/2019</b></h3>
+    </div>
+
+    <div class="w3-row-padding w3-padding-16">
+      <div class="w3-third w3-margin-bottom">
+        <img src="assets/images/jamaa.jpg" alt="Marrakech" style="width:100%">
+        <div class="w3-container w3-white">
+          <h3>Marrakech, Morocco</h3>
+          <h6 class="w3-opacity">From $90</h6>
+          <p>Marrakesh, a former imperial city in western Morocco, is a major economic center and home to mosques, palaces and gardens. The medina is a densely packed, walled medieval city dating to the Berber Empire, with mazelike alleys where thriving
+            souks (marketplaces) sell traditional textiles, pottery and jewelry. A symbol of the city, and visible for miles, is the Moorish minaret of 12th-century Koutoubia Mosque.</p>
+        </div>
+      </div>
+      <div class="w3-third w3-margin-bottom">
+        <img src="assets/images/tokyo2.jpg" alt="Japan" style="width:100%">
+        <div class="w3-container w3-white">
+          <h3>Tokyo, Japan</h3>
+          <h6 class="w3-opacity">From $95</h6>
+          <p>Tokyo, Japan’s busy capital, mixes the ultramodern and the traditional, from neon-lit skyscrapers to historic temples. The opulent Meiji Shinto Shrine is known for its towering gate and surrounding woods. The Imperial Palace sits amid large
+            public gardens. The city's many museums offer exhibits ranging from classical art (in the Tokyo National Museum) to a reconstructed kabuki theater (in the Edo-Tokyo Museum).</p>
+        </div>
+      </div>
+      <div class="w3-third w3-margin-bottom">
+        <img src="assets/images/maldives.jpg" alt="Maldives" style="width:100%">
+        <div class="w3-container w3-white">
+          <h3>The Maldives</h3>
+          <h6 class="w3-opacity">From $80</h6>
+          <p>The Maldives is a tropical nation in the Indian Ocean composed of 26 ring-shaped atolls, which are made up of more than 1,000 coral islands. It’s known for its beaches, blue lagoons and extensive reefs. The capital, Malé, has a busy fish market,
+            restaurants and shops on the main road, Majeedhee Magu, and 17th-century Hukuru Miskiy (also known as Friday Mosque) made of carved white coral.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hotels Map -->
+    <div id="hotel" class="w3-container">
+      <h3><b>Search Hotels</b></h3>
+      <p>Simply, enter the <b>city and country</b> you are traveling to & we will find <b>the best hotels </b>for you!</p>
+
+      <div id="findhotels">
+        Find hotels in:
+      </div>
+
+      <div id="locationField">
+        <input id="autocomplete" placeholder="Enter a city" type="text" />
+      </div>
+
+      <div id="controls">
+        <select id="country">
+        <option value="all">All</option>
+        <option value="au">Australia</option>
+        <option value="br">Brazil</option>
+        <option value="ca">Canada</option>
+        <option value="fr">France</option>
+        <option value="de">Germany</option>
+        <option value="mx">Mexico</option>
+        <option value="nz">New Zealand</option>
+        <option value="it">Italy</option>
+        <option value="za">South Africa</option>
+        <option value="es">Spain</option>
+        <option value="pt">Portugal</option>
+        <option value="us" selected>U.S.A.</option>
+        <option value="uk">United Kingdom</option>
+      </select>
+      </div>
+
+      <div id="map"></div>
+
+      <div id="listing">
+        <table id="resultsTable">
+          <tbody id="results"></tbody>
+        </table>
+      </div>
+
+      <div style="display: none">
+        <div id="info-content">
+          <table>
+            <tr id="iw-url-row" class="iw_table_row">
+              <td id="iw-icon" class="iw_table_icon"></td>
+              <td id="iw-url"></td>
+            </tr>
+            <tr id="iw-address-row" class="iw_table_row">
+              <td class="iw_attribute_name">Address:</td>
+              <td id="iw-address"></td>
+            </tr>
+            <tr id="iw-phone-row" class="iw_table_row">
+              <td class="iw_attribute_name">Telephone:</td>
+              <td id="iw-phone"></td>
+            </tr>
+            <tr id="iw-rating-row" class="iw_table_row">
+              <td class="iw_attribute_name">Rating:</td>
+              <td id="iw-rating"></td>
+            </tr>
+            <tr id="iw-website-row" class="iw_table_row">
+              <td class="iw_attribute_name">Website:</td>
+              <td id="iw-website"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Contact -->
+    <div class="w3-container">
+      <h2>Contact</h2>
+      <p>Let us book your next trip!</p>
+      <i class="fa fa-map-marker" style="width:30px"></i>London, UK<br>
+      <i class="fa fa-phone" style="width:30px"></i> Phone:+447957092499<br>
+      <i class="fa fa-envelope" style="width:30px"> </i> Email: oclock@bookings.com <br>
+      <form onsubmit="return sendMail(this);">
+        <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name" required name="name"></p>
+        <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Email" required name="email"></p>
+        <p><textarea class="w3-input w3-padding-16 w3-border" placeholder="Message" required name="message"></textarea></p>
+        <p><button class="w3-button w3-black w3-padding-large" type="submit">SEND MESSAGE</button></p>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-center w3-opacity w3-margin-bottom">
+    <h5>Find Us On</h5>
+    <div class="w3-xlarge w3-padding-16">
+      <i class="fa fa-facebook-official w3-hover-opacity"></i>
+      <i class="fa fa-instagram w3-hover-opacity"></i>
+      <i class="fa fa-snapchat w3-hover-opacity"></i>
+      <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+      <i class="fa fa-twitter w3-hover-opacity"></i>
+      <i class="fa fa-linkedin w3-hover-opacity"></i>
+    </div>
+    <div class=" w3-left  w3-margin-bottom">
+      <p>&copy;Booking-O'clock,2019</p>
+    </div>
+  </footer>
+
+
+  <script src="assets/js/sendEmail.js"></script>
+
+  <script>
+    // Tabs
+    function openLink(evt, linkName) {
+      var i, x, tablinks;
+      x = document.getElementsByClassName("myLink");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+      }
+      document.getElementById(linkName).style.display = "block";
+      evt.currentTarget.className += " w3-red";
+    }
+    document.getElementsByClassName("tablink")[0].click();
+  </script>
+
+  <script>
+    var map, places, infoWindow;
+    var markers = [];
+    var autocomplete;
+    var countryRestrict = { 'country': 'us' };
+    var MARKER_PATH = 'https://developers.google.com/maps/documentation/javascript/images/marker_green';
+    var hostnameRegexp = new RegExp('^https?://.+?/');
+
+    var countries = {
+      'au': {
+        center: { lat: -25.3, lng: 133.8 },
+        zoom: 4
+      },
+      'br': {
+        center: { lat: -14.2, lng: -51.9 },
+        zoom: 3
+      },
+      'ca': {
+        center: { lat: 62, lng: -110.0 },
+        zoom: 3
+      },
+      'fr': {
+        center: { lat: 46.2, lng: 2.2 },
+        zoom: 5
+      },
+      'de': {
+        center: { lat: 51.2, lng: 10.4 },
+        zoom: 5
+      },
+      'mx': {
+        center: { lat: 23.6, lng: -102.5 },
+        zoom: 4
+      },
+      'nz': {
+        center: { lat: -40.9, lng: 174.9 },
+        zoom: 5
+      },
+      'it': {
+        center: { lat: 41.9, lng: 12.6 },
+        zoom: 5
+      },
+      'za': {
+        center: { lat: -30.6, lng: 22.9 },
+        zoom: 5
+      },
+      'es': {
+        center: { lat: 40.5, lng: -3.7 },
+        zoom: 5
+      },
+      'pt': {
+        center: { lat: 39.4, lng: -8.2 },
+        zoom: 6
+      },
+      'us': {
+        center: { lat: 37.1, lng: -95.7 },
+        zoom: 3
+      },
+      'uk': {
+        center: { lat: 54.8, lng: -4.6 },
+        zoom: 5
+      }
+    };
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: countries['us'].zoom,
+        center: countries['us'].center,
+        mapTypeControl: false,
+        panControl: false,
+        zoomControl: false,
+        streetViewControl: false
+      });
+
+      infoWindow = new google.maps.InfoWindow({
+        content: document.getElementById('info-content')
+      });
+
+      // Create the autocomplete object and associate it with the UI input control.
+      // Restrict the search to the default country, and to place type "cities".
+      autocomplete = new google.maps.places.Autocomplete(
+        /** @type {!HTMLInputElement} */
+        (
+          document.getElementById('autocomplete')), {
+          types: ['(cities)'],
+          componentRestrictions: countryRestrict
+        });
+      places = new google.maps.places.PlacesService(map);
+
+      autocomplete.addListener('place_changed', onPlaceChanged);
+
+      // Add a DOM event listener to react when the user selects a country.
+      document.getElementById('country').addEventListener(
+        'change', setAutocompleteCountry);
+    }
+
+    // When the user selects a city, get the place details for the city and
+    // zoom the map in on the city.
+    function onPlaceChanged() {
+      var place = autocomplete.getPlace();
+      if (place.geometry) {
+        map.panTo(place.geometry.location);
+        map.setZoom(15);
+        search();
+      }
+      else {
+        document.getElementById('autocomplete').placeholder = 'Enter a city';
+      }
+    }
+
+    // Search for hotels in the selected city, within the viewport of the map.
+    function search() {
+      var search = {
+        bounds: map.getBounds(),
+        types: ['lodging']
+      };
+
+      places.nearbySearch(search, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          clearResults();
+          clearMarkers();
+          // Create a marker for each hotel found, and
+          // assign a letter of the alphabetic to each marker icon.
+          for (var i = 0; i < results.length; i++) {
+            var markerLetter = String.fromCharCode('A'.charCodeAt(0) + (i % 26));
+            var markerIcon = MARKER_PATH + markerLetter + '.png';
+            // Use marker animation to drop the icons incrementally on the map.
+            markers[i] = new google.maps.Marker({
+              position: results[i].geometry.location,
+              animation: google.maps.Animation.DROP,
+              icon: markerIcon
+            });
+            // If the user clicks a hotel marker, show the details of that hotel
+            // in an info window.
+            markers[i].placeResult = results[i];
+            google.maps.event.addListener(markers[i], 'click', showInfoWindow);
+            setTimeout(dropMarker(i), i * 100);
+            addResult(results[i], i);
+          }
+        }
+      });
+    }
+
+    function clearMarkers() {
+      for (var i = 0; i < markers.length; i++) {
+        if (markers[i]) {
+          markers[i].setMap(null);
+        }
+      }
+      markers = [];
+    }
+
+    // Set the country restriction based on user input.
+    // Also center and zoom the map on the given country.
+    function setAutocompleteCountry() {
+      var country = document.getElementById('country').value;
+      if (country == 'all') {
+        autocomplete.setComponentRestrictions({ 'country': [] });
+        map.setCenter({ lat: 15, lng: 0 });
+        map.setZoom(2);
+      }
+      else {
+        autocomplete.setComponentRestrictions({ 'country': country });
+        map.setCenter(countries[country].center);
+        map.setZoom(countries[country].zoom);
+      }
+      clearResults();
+      clearMarkers();
+    }
+
+    function dropMarker(i) {
+      return function() {
+        markers[i].setMap(map);
+      };
+    }
+
+    function addResult(result, i) {
+      var results = document.getElementById('results');
+      var markerLetter = String.fromCharCode('A'.charCodeAt(0) + (i % 26));
+      var markerIcon = MARKER_PATH + markerLetter + '.png';
+
+      var tr = document.createElement('tr');
+      tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF');
+      tr.onclick = function() {
+        google.maps.event.trigger(markers[i], 'click');
+      };
+
+      var iconTd = document.createElement('td');
+      var nameTd = document.createElement('td');
+      var icon = document.createElement('img');
+      icon.src = markerIcon;
+      icon.setAttribute('class', 'placeIcon');
+      icon.setAttribute('className', 'placeIcon');
+      var name = document.createTextNode(result.name);
+      iconTd.appendChild(icon);
+      nameTd.appendChild(name);
+      tr.appendChild(iconTd);
+      tr.appendChild(nameTd);
+      results.appendChild(tr);
+    }
+
+    function clearResults() {
+      var results = document.getElementById('results');
+      while (results.childNodes[0]) {
+        results.removeChild(results.childNodes[0]);
+      }
+    }
+
+    // Get the place details for a hotel. Show the information in an info window,
+    // anchored on the marker for the hotel that the user selected.
+    function showInfoWindow() {
+      var marker = this;
+      places.getDetails({ placeId: marker.placeResult.place_id },
+        function(place, status) {
+          if (status !== google.maps.places.PlacesServiceStatus.OK) {
+            return;
+          }
+          infoWindow.open(map, marker);
+          buildIWContent(place);
+        });
+    }
+
+    // Load the place information into the HTML elements used by the info window.
+    function buildIWContent(place) {
+      document.getElementById('iw-icon').innerHTML = '<img class="hotelIcon" ' +
+        'src="' + place.icon + '"/>';
+      document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url +
+        '">' + place.name + '</a></b>';
+      document.getElementById('iw-address').textContent = place.vicinity;
+
+      if (place.formatted_phone_number) {
+        document.getElementById('iw-phone-row').style.display = '';
+        document.getElementById('iw-phone').textContent =
+          place.formatted_phone_number;
+      }
+      else {
+        document.getElementById('iw-phone-row').style.display = 'none';
+      }
+
+      // Assign a five-star rating to the hotel, using a black star ('&#10029;')
+      // to indicate the rating the hotel has earned, and a white star ('&#10025;')
+      // for the rating points not achieved.
+      if (place.rating) {
+        var ratingHtml = '';
+        for (var i = 0; i < 5; i++) {
+          if (place.rating < (i + 0.5)) {
+            ratingHtml += '&#10025;';
+          }
+          else {
+            ratingHtml += '&#10029;';
+          }
+          document.getElementById('iw-rating-row').style.display = '';
+          document.getElementById('iw-rating').innerHTML = ratingHtml;
+        }
+      }
+      else {
+        document.getElementById('iw-rating-row').style.display = 'none';
+      }
+
+      // The regexp isolates the first part of the URL (domain plus subdomain)
+      // to give a short URL for displaying in the info window.
+      if (place.website) {
+        var fullUrl = place.website;
+        var website = hostnameRegexp.exec(place.website);
+        if (website === null) {
+          website = 'http://' + place.website + '/';
+          fullUrl = website;
+        }
+        document.getElementById('iw-website-row').style.display = '';
+        document.getElementById('iw-website').textContent = website;
+      }
+      else {
+        document.getElementById('iw-website-row').style.display = 'none';
+      }
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEcy1Ic1Ho87ZKzeIL_7jHCPnpi6ol1N0&libraries=places&callback=initMap" async defer></script>
+
+  <script>
+    function myFunction() {
+      var x = document.getElementById("myLinks");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+      }
+      else {
+        x.style.display = "block";
+      }
+    }
+  </script>
+</body>
+
+</html>
